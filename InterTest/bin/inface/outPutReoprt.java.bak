@@ -1,0 +1,77 @@
+package inface;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
+import java.io.IOException;
+import java.io.FileNotFoundException;  
+import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.*;
+import inface.JdyTest;
+public class outPutReoprt  {
+	
+	
+	
+			
+
+	Date now=getDate();   
+	String filePath="E:\\\\workspace\\\\InterTest\\\\src\\\\inface\\\\"+now.toString()+".html";
+	
+	
+	public Date getDate() {
+		long time=System.currentTimeMillis();
+		Date now=new Date();
+		now.setTime(time);
+		return now;
+
+	}
+	
+	/*public static void main(String args[]) throws IOException{
+		
+		outPutHtml();
+		System.out.println("success");
+	}*/
+
+	public  void outPutHtml(AppReport report,Date startTime,Date endTime )throws FileNotFoundException {			
+		StringBuilder stringHtml = new StringBuilder(); 
+		String table="";
+		int success=0;
+		int fail=0;
+		PrintStream printStream=null;
+		
+		try{  
+		   //打开文件  
+			
+		 printStream = new PrintStream(new FileOutputStream(filePath));  
+		 
+		//输入HTML文件内容  
+		stringHtml.append("<html><head>");  
+		stringHtml.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">");  
+		stringHtml.append("<title>自动化测试报告</title>");   
+		stringHtml.append("</head>");  
+		stringHtml.append("<body><p>自动化测试结果</p>");  
+		ArrayList<JdyTest> jTest=report.outputReport;	
+		for(int i=0;i<jTest.size();i++ ){
+			JdyTest unit=jTest.get(i);	
+		    table=table+"<tr><th>"+i+"</th>"+"<th>"+unit.caseName+"</th>"+"<th>"+unit.result+"</th>"+"<th>"+unit.wrongKey+"</th>"+"<th>"+unit.errorMessage+"</th>"+"<th>"+unit.parseApimsg+"</th>";
+		    if(unit.result){success=success+1;}	//计算成功的用力书	    
+			}			
+		fail=jTest.size()-success;	
+		stringHtml.append("<p>startTime:"+startTime+"</p><p>endTime:"+endTime+"</p><p>totalExcute:"+jTest.size()+"</p><p>successNumber:"+success+"</p><p>failNumber:"+fail+"</p><table>");		
+		stringHtml.append("<table><tr><th>ID</th><th>caseName</th><th>result</th><th>wrongKey</th><th>errorMessage</th><th>AutoTestError</th></tr>");
+		stringHtml.append(table+"</table></body></html>");  
+		 //将HTML文件内容写入文件中  
+		printStream.println(stringHtml.toString());  
+		
+		}catch (Exception e) {  
+		      
+		    e.printStackTrace();  
+		}  	
+	
+	
+	}	
+	
+	
+	
+}
+	
